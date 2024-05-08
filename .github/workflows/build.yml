@@ -12,12 +12,13 @@ jobs:
      - name: Setup Java
        uses: actions/setup-java@v4
        with: 
-         distribution: 'temurin'
+         distribution: 'corretto'
          java-version: 17
      - name: Build APK
        run: ./gradlew assembleRelease
      - name: Upload APK
        uses: actions/upload-artifact@v4
        with:
-         name: SomeAppName.apk
-         path: app/build/outputs/apk/release/app-release-unsigned.apk
+         name: SomeAppName
+         path: app/build/outputs/apk/release/*.apk
+         retention-days: 3
