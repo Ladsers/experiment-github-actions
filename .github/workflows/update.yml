@@ -20,3 +20,7 @@ jobs:
          gradlePath: app/build.gradle.kts 
          versionCode: 10
          versionName: "1.0.10"
+     - name: Commit & Push changes
+       uses: actions-js/push@v1.5
+       with:
+         github_token: ${{ secrets.GITHUB_TOKEN }}
