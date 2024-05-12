@@ -1,0 +1,22 @@
+name: Update version tag 
+on:
+    push:
+      branches: 
+      - "main"
+jobs:
+  Update-Job:
+    runs-on: ubuntu-latest
+    steps:
+     - name: Checkout
+       uses: actions/checkout@v4
+     - name: Setup Java
+       uses: actions/setup-java@v4
+       with: 
+         distribution: 'corretto'
+         java-version: 17
+     - name: Update version tag
+       uses: chkfung/android-version-actions@v1.2.2
+       with:
+         gradlePath: app/build.gradle.kts 
+         versionCode: 10
+         versionName: "1.0.10"
