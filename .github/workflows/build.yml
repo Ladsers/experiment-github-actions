@@ -1,26 +1,26 @@
-name: Release apk
-on:
-    push:
-      branches: 
-      - "main"
-jobs:
-  Build-Job:
-    runs-on: ubuntu-latest
-    steps:
-     - name: Checkout
-       uses: actions/checkout@v4
-     - name: Setup Java
-       uses: actions/setup-java@v4
-       with: 
-         distribution: 'corretto'
-         java-version: 17
-     - name: Build APK
-       run: ./gradlew assembleRelease
-     - name: Create release
-       uses: softprops/action-gh-release@v2
-       with:
-         body: "Some release message"
-         tag_name: "1.0"
-         name: "Some app v.1.0"
-         make_latest: true
-         files: app/build/outputs/apk/release/*.apk
+# name: Release apk
+# on:
+#     push:
+#       branches: 
+#       - "main"
+# jobs:
+#   Build-Job:
+#     runs-on: ubuntu-latest
+#     steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#      - name: Setup Java
+#        uses: actions/setup-java@v4
+#        with: 
+#          distribution: 'corretto'
+#          java-version: 17
+#      - name: Build APK
+#        run: ./gradlew assembleRelease
+#      - name: Create release
+#        uses: softprops/action-gh-release@v2
+#        with:
+#          body: "Some release message"
+#          tag_name: "1.0"
+#          name: "Some app v.1.0"
+#          make_latest: true
+#          files: app/build/outputs/apk/release/*.apk
