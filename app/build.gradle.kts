@@ -13,7 +13,7 @@ android {
         applicationId = "com.ladsers.experiments.githubactions.android"
         minSdk = 24
         targetSdk = 34
-        versionCode = 207
+        versionCode = 208
         versionName = "1.0.10"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
