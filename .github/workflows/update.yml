@@ -17,12 +17,12 @@ jobs:
      - name: Set number offset 
        env:
           RUN_NUMBER: ${{ github.run_number }}
-       run: ::set-env name=GITHUB_RUN_NUMBER_WITH_OFFSET::$(($RUN_NUMBER+100))
+       run: echo "GITHUB_RUN_NUMBER_WITH_OFFSET=$(($RUN_NUMBER + 200))" >> $GITHUB_ENV
      - name: Update version tag
        uses: chkfung/android-version-actions@v1.2.2
        with:
          gradlePath: app/build.gradle.kts 
-         versionCode: $GITHUB_RUN_NUMBER_WITH_OFFSET
+         versionCode: ${{ env.GITHUB_RUN_NUMBER_WITH_OFFSET }}
          versionName: "1.0.10"
      - name: Commit & Push changes
        uses: actions-js/push@v1.5
