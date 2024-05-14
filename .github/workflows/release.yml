@@ -1,0 +1,55 @@
+name: Release workflow
+on:
+  pull_request:
+    branches: 
+      - release
+    types: [closed]
+jobs:
+  Create-Release:
+    if: ${{ github.event.pull_request.merged }}
+    runs-on: ubuntu-latest
+    steps:
+     - name: Checkout
+       uses: actions/checkout@v4
+       with:
+         ref: release
+
+     - name: Setup Java
+       uses: actions/setup-java@v4
+       with: 
+         distribution: 'corretto'
+         java-version: 17
+
+     - name: Calc version code
+       env:
+          RUN_NUMBER: ${{ github.run_number }}
+       run: echo "GITHUB_RUN_NUMBER_WITH_OFFSET=$(($RUN_NUMBER + 200))" >> $GITHUB_ENV
+
+     - name: Update version
+       env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+       uses: chkfung/android-version-actions@v1.2.2
+       with:
+         gradlePath: app/build.gradle.kts 
+         versionCode: ${{ env.GITHUB_RUN_NUMBER_WITH_OFFSET }}
+         versionName: $PR_TITLE
+
+     - name: Build APK
+       run: ./gradlew assembleRelease
+
+     - name: Commit & Push changes
+       uses: actions-js/push@v1.5
+       with:
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+     - name: Create release
+       env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+       uses: softprops/action-gh-release@v2
+       with:
+          body: $PR_BODY
+          tag_name: $PR_TITLE
+          name: $PR_TITLE
+          make_latest: true
+          files: app/build/outputs/apk/release/*.apk
