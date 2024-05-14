@@ -25,6 +25,14 @@ jobs:
           RUN_NUMBER: ${{ github.run_number }}
        run: echo "GITHUB_RUN_NUMBER_WITH_OFFSET=$(($RUN_NUMBER + 200))" >> $GITHUB_ENV
 
+     - name: Get pull request info
+       env: 
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+       run: |
+          echo "PR_TITLE=$PR_TITLE" >> $GITHUB_ENV
+          echo "PR_BODY=$PR_BODY" >> $GITHUB_ENV
+
      - name: Update version
        env:
           PR_TITLE: ${{ github.event.pull_request.title }}
@@ -32,7 +40,7 @@ jobs:
        with:
          gradlePath: app/build.gradle.kts 
          versionCode: ${{ env.GITHUB_RUN_NUMBER_WITH_OFFSET }}
-         versionName: $PR_TITLE
+         versionName: ${{ env.PR_TITLE }}
 
      - name: Build APK
        run: ./gradlew assembleRelease
@@ -43,13 +51,10 @@ jobs:
          github_token: ${{ secrets.GITHUB_TOKEN }}
 
      - name: Create release
-       env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
-          PR_BODY: ${{ github.event.pull_request.body }}
        uses: softprops/action-gh-release@v2
        with:
-          body: $PR_BODY
-          tag_name: $PR_TITLE
-          name: $PR_TITLE
+          body: ${{ env.PR_BODY }}
+          tag_name: ${{ env.PR_TITLE }}
+          name: ${{ env.PR_TITLE }}
           make_latest: true
           files: app/build/outputs/apk/release/*.apk
