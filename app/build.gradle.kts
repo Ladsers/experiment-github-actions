@@ -13,8 +13,8 @@ android {
         applicationId = "com.ladsers.experiments.githubactions.android"
         minSdk = 24
         targetSdk = 34
-        versionCode = 208
-        versionName = "1.0.10"
+        versionCode = 204
+        versionName = "1.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
