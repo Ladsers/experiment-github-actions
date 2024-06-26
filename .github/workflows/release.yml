@@ -61,6 +61,26 @@ jobs:
        with:
           body: ${{ env.PR_BODY }}
           tag_name: ${{ env.PR_TITLE }}
+          target_commitish: 'release'
           name: ${{ env.PR_TITLE }}
           make_latest: true
           files: app/build/outputs/apk/release/*.apk
+
+  Rebase:
+    needs: Create-Release
+    if: ${{ github.event.pull_request.merged }}
+    runs-on: ubuntu-latest
+    steps:
+     - name: Checkout
+       uses: actions/checkout@v4
+       with:
+         ref: main
+    
+     - name: Rebase main onto release
+       uses: martincostello/rebaser@v1
+       with:
+         branch: release
+
+     - name: Push changes
+       if : ${{ steps.rebase.outputs.result == 'success' }}
+       run: git push --force-with-lease origin main
